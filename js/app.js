@@ -57,4 +57,43 @@
   };
 
   // ADD YOUR CODE HERE
+
+  let searchButton = document.querySelector('button')
+  let textInput = document.querySelector('input')
+  let searchString = []
+  let url = 'https://omdb-api.now.sh/?s='
+
+  console.log(searchButton, textInput)
+
+
+  searchButton.addEventListener('click', function(event){
+    event.preventDefault()
+    if (textInput.value.length === 0) {
+      alert('need text to search')
+    }
+    else {
+      movies.splice(0,movies.length)
+      searchString = textInput.value.split(' ')
+      searchString = searchString.join('%20')
+      textInput.value = ''
+
+      fetch(url + searchString)
+      .then((response) => response.json())
+      .then((data)=> {
+        for (var i = 0; i < data.Search.length; i++) {
+        console.log(data.Search[i])
+
+        var movieObject = new Object
+        movieObject['id'] = data.Search[i].imdbID
+        movieObject['poster'] = data.Search[i].Poster
+        movieObject['title'] = data.Search[i].Title
+        movieObject['year'] = data.Search[i].Year  
+
+        console.log(movieObject)
+        movies.push(movieObject)
+        renderMovies()
+        }
+      })
+    }
+  })
 })();
